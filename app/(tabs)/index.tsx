@@ -5,6 +5,7 @@ export default function Home() {
   return (
     <View>
       <Text>Hello home</Text>
+      <Link href={"/(modals)/login"}>Login</Link>
     </View>
   )
 }
