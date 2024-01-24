@@ -1,9 +1,10 @@
-import { Text, View } from 'tamagui'
+import { Link } from "expo-router"
+import { H1, H6, Text, View, YStack } from "tamagui"
 
-export default function TabOneScreen() {
+export default function Home() {
   return (
-    <View flex={1} alignItems="center">
-      <Text fontSize={20}>Tab One</Text>
+    <View>
+      <Text>Hello home</Text>
     </View>
   )
 }
