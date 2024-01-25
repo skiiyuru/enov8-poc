@@ -10,10 +10,12 @@ import { TouchableOpacity, useColorScheme } from "react-native"
 import { TamaguiProvider, Text } from "tamagui"
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo"
 import * as SecureStore from "expo-secure-store"
+import Ionicons from "@expo/vector-icons/Ionicons"
 
 import { config } from "../tamagui.config"
 import { useFonts } from "expo-font"
 import { useEffect } from "react"
+import ModalCloseButton from "../components/ModalCloseButton"
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
 // Cache the Clerk JWT
@@ -87,13 +89,27 @@ function RootLayoutNav() {
             name="(modals)/login"
             options={{
               presentation: "modal",
-              title: "Log in or sign up",
+              title: "Log in",
 
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => router.back()}>
-                  <Text>✖️</Text>
-                </TouchableOpacity>
-              ),
+              headerLeft: () => <ModalCloseButton />,
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/register"
+            options={{
+              presentation: "modal",
+              title: "Sign up",
+
+              headerLeft: () => <ModalCloseButton />,
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/reset"
+            options={{
+              presentation: "modal",
+              title: "Reset password",
+
+              headerLeft: () => <ModalCloseButton />,
             }}
           />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

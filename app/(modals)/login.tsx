@@ -1,8 +1,17 @@
 import { useOAuth, useSignIn } from "@clerk/clerk-expo"
-import { useRouter } from "expo-router"
+import Ionicons from "@expo/vector-icons/Ionicons"
+import { Link, useRouter } from "expo-router"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { Button, Input, Spinner, Text, YStack } from "tamagui"
+import {
+  Button,
+  Input,
+  Separator,
+  Spinner,
+  Text,
+  XStack,
+  YStack,
+} from "tamagui"
 import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser"
 
 type formData = {
@@ -81,57 +90,100 @@ export default function Login() {
   }
 
   return (
-    <YStack gap="$2" padding="$4">
-      <YStack>
-        <Controller
-          name="email"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              id="email"
-              size="$4"
-              placeholder="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
-        {errors.email && <Text color="red">This is required.</Text>}
-      </YStack>
+    <YStack gap="$4" padding="$4">
+      <YStack gap="$2">
+        <YStack>
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                id="email"
+                size="$4"
+                placeholder="Email"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+          {errors.email && <Text color="red">This is required.</Text>}
+        </YStack>
 
-      <YStack>
-        <Controller
-          name="password"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              id="password"
-              size="$4"
-              placeholder="Password"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
-        {errors.password && <Text color="red">This is required.</Text>}
-      </YStack>
+        <YStack gap={"$2"}>
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                id="password"
+                size="$4"
+                placeholder="Password"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
+          {errors.password && <Text color="red">This is required.</Text>}
+          <XStack px={"$2"}>
+            <Link style={{ color: "gray" }} href={"/(modals)/reset"}>
+              Forgot password?
+            </Link>
+          </XStack>
+        </YStack>
 
-      <Button
-        theme={"active"}
-        disabled={!isValid || loading}
-        icon={loading ? () => <Spinner /> : undefined}
-        onPress={handleSubmit(handleLogin)}
-      >
-        Login
-      </Button>
+        <Button
+          my={"$2"}
+          theme={"active"}
+          disabled={!isValid || loading}
+          icon={loading ? () => <Spinner /> : undefined}
+          onPress={handleSubmit(handleLogin)}
+        >
+          Continue
+        </Button>
+        <Link href={"/(modals)/register"} asChild>
+          <Button variant="outlined" borderColor={"lightgray"} theme={"active"}>
+            Sign up
+          </Button>
+        </Link>
+      </YStack>
+      <XStack gap={"$2"} alignItems="center">
+        <Separator borderColor={"lightgray"} />
+        <Text color={"gray"} textAlign="center">
+          or
+        </Text>
+        <Separator borderColor={"lightgray"} />
+      </XStack>
+      <YStack gap={"$4"}>
+        <Button
+          icon={() => <Ionicons name="logo-google" size={24} color="black" />}
+          theme={"active"}
+          onPress={() => handle0Auth(Strategy.Google)}
+        >
+          Continue with Google
+        </Button>
+        <Button
+          icon={() => <Ionicons name="logo-apple" size={24} color="black" />}
+          theme={"active"}
+          // onPress={() => handle0Auth(Strategy.Apple)}
+        >
+          Continue with Apple
+        </Button>
+        <Button
+          icon={() => <Ionicons name="logo-facebook" size={24} color="black" />}
+          theme={"active"}
+          // onPress={() => handle0Auth(Strategy.Facebook)}
+        >
+          Continue with Facebook
+        </Button>
+      </YStack>
     </YStack>
   )
 }
