@@ -13,8 +13,10 @@ import {
   YStack,
 } from "tamagui"
 import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser"
+import ControlledInput from "../../components/ControlledInput"
+import DismissKeyboardHoc from "../../components/DismissKeyboardHoc"
 
-type formData = {
+export type formData = {
   email: string
   password: string
 }
@@ -26,6 +28,8 @@ enum Strategy {
 }
 
 export default function Login() {
+  const router = useRouter()
+
   // form stuff
   const [loading, setLoading] = useState(false)
   const { signIn, setActive, isLoaded } = useSignIn()
@@ -52,7 +56,9 @@ export default function Login() {
       })
 
       // This indicates the user is signed in
-      await setActive({ session: completeSignIn.createdSessionId })
+      await setActive({ session: completeSignIn.createdSessionId }).then(() =>
+        router.navigate("/(tabs)")
+      )
     } catch (err: any) {
       alert(err.errors[0].message)
     } finally {
@@ -63,7 +69,6 @@ export default function Login() {
   //0Auth stuff
   useWarmUpBrowser()
 
-  const router = useRouter()
   const { startOAuthFlow: googleAuth } = useOAuth({ strategy: "oauth_google" })
   const { startOAuthFlow: appleAuth } = useOAuth({ strategy: "oauth_apple" })
   const { startOAuthFlow: facebookAuth } = useOAuth({
@@ -82,7 +87,7 @@ export default function Login() {
 
       if (createdSessionId) {
         setActive!({ session: createdSessionId })
-        router.back()
+        router.navigate("/")
       }
     } catch (err) {
       console.error("OAuth error", err)
@@ -90,100 +95,85 @@ export default function Login() {
   }
 
   return (
-    <YStack gap="$4" padding="$4">
-      <YStack gap="$2">
-        <YStack>
-          <Controller
-            name="email"
+    <DismissKeyboardHoc>
+      <YStack gap="$4" padding="$4">
+        <YStack gap="$2">
+          <ControlledInput
+            name={"email"}
             control={control}
             rules={{
               required: true,
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                id="email"
-                size="$4"
-                placeholder="Email"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
+            error={errors.email}
           />
-          {errors.email && <Text color="red">This is required.</Text>}
-        </YStack>
 
-        <YStack gap={"$2"}>
-          <Controller
-            name="password"
+          <ControlledInput
+            name={"password"}
             control={control}
             rules={{
               required: true,
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                id="password"
-                size="$4"
-                placeholder="Password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
-          />
-          {errors.password && <Text color="red">This is required.</Text>}
-          <XStack px={"$2"}>
-            <Link style={{ color: "gray" }} href={"/(modals)/reset"}>
-              Forgot password?
-            </Link>
-          </XStack>
-        </YStack>
+            error={errors.password}
+          >
+            <XStack px={"$2"}>
+              <Link style={{ color: "gray" }} href={"/(modals)/reset"}>
+                Forgot password?
+              </Link>
+            </XStack>
+          </ControlledInput>
 
-        <Button
-          my={"$2"}
-          theme={"active"}
-          disabled={!isValid || loading}
-          icon={loading ? () => <Spinner /> : undefined}
-          onPress={handleSubmit(handleLogin)}
-        >
-          Continue
-        </Button>
-        <Link href={"/(modals)/register"} asChild>
-          <Button variant="outlined" borderColor={"lightgray"} theme={"active"}>
-            Sign up
+          <Button
+            my={"$2"}
+            theme={"active"}
+            disabled={!isValid || loading}
+            icon={loading ? () => <Spinner /> : undefined}
+            onPress={handleSubmit(handleLogin)}
+          >
+            Continue
           </Button>
-        </Link>
+          <Link href={"/(modals)/register"} asChild>
+            <Button
+              variant="outlined"
+              borderColor={"lightgray"}
+              theme={"active"}
+            >
+              Sign up
+            </Button>
+          </Link>
+        </YStack>
+        <XStack gap={"$2"} alignItems="center">
+          <Separator borderColor={"lightgray"} />
+          <Text color={"gray"} textAlign="center">
+            or
+          </Text>
+          <Separator borderColor={"lightgray"} />
+        </XStack>
+        <YStack gap={"$4"}>
+          <Button
+            icon={() => <Ionicons name="logo-google" size={24} color="black" />}
+            theme={"active"}
+            onPress={() => handle0Auth(Strategy.Google)}
+          >
+            Continue with Google
+          </Button>
+          <Button
+            icon={() => <Ionicons name="logo-apple" size={24} color="black" />}
+            theme={"active"}
+            // onPress={() => handle0Auth(Strategy.Apple)}
+          >
+            Continue with Apple
+          </Button>
+          <Button
+            icon={() => (
+              <Ionicons name="logo-facebook" size={24} color="black" />
+            )}
+            theme={"active"}
+            // onPress={() => handle0Auth(Strategy.Facebook)}
+          >
+            Continue with Facebook
+          </Button>
+        </YStack>
       </YStack>
-      <XStack gap={"$2"} alignItems="center">
-        <Separator borderColor={"lightgray"} />
-        <Text color={"gray"} textAlign="center">
-          or
-        </Text>
-        <Separator borderColor={"lightgray"} />
-      </XStack>
-      <YStack gap={"$4"}>
-        <Button
-          icon={() => <Ionicons name="logo-google" size={24} color="black" />}
-          theme={"active"}
-          onPress={() => handle0Auth(Strategy.Google)}
-        >
-          Continue with Google
-        </Button>
-        <Button
-          icon={() => <Ionicons name="logo-apple" size={24} color="black" />}
-          theme={"active"}
-          // onPress={() => handle0Auth(Strategy.Apple)}
-        >
-          Continue with Apple
-        </Button>
-        <Button
-          icon={() => <Ionicons name="logo-facebook" size={24} color="black" />}
-          theme={"active"}
-          // onPress={() => handle0Auth(Strategy.Facebook)}
-        >
-          Continue with Facebook
-        </Button>
-      </YStack>
-    </YStack>
+    </DismissKeyboardHoc>
   )
 }
