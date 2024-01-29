@@ -115,9 +115,12 @@ export default function Login() {
             }}
             error={errors.password}
           >
-            <XStack px={"$2"}>
+            <XStack px={"$1"} justifyContent="space-between">
               <Link style={{ color: "gray" }} href={"/(modals)/reset"}>
                 Forgot password?
+              </Link>
+              <Link style={{ color: "gray" }} href={"/(modals)/register"}>
+                Sign up?
               </Link>
             </XStack>
           </ControlledInput>
@@ -131,15 +134,17 @@ export default function Login() {
           >
             Continue
           </Button>
-          <Link href={"/(modals)/register"} asChild>
+
+          {/* <Link href={"/(modals)/register"} asChild>
             <Button
               variant="outlined"
               borderColor={"lightgray"}
+              borderWidth={"$0.5"}
               theme={"active"}
             >
               Sign up
             </Button>
-          </Link>
+          </Link> */}
         </YStack>
         <XStack gap={"$2"} alignItems="center">
           <Separator borderColor={"lightgray"} />
@@ -159,7 +164,7 @@ export default function Login() {
           <Button
             icon={() => <Ionicons name="logo-apple" size={24} color="black" />}
             theme={"active"}
-            // onPress={() => handle0Auth(Strategy.Apple)}
+            onPress={() => handle0Auth(Strategy.Apple)}
           >
             Continue with Apple
           </Button>
@@ -168,7 +173,7 @@ export default function Login() {
               <Ionicons name="logo-facebook" size={24} color="black" />
             )}
             theme={"active"}
-            // onPress={() => handle0Auth(Strategy.Facebook)}
+            onPress={() => handle0Auth(Strategy.Facebook)}
           >
             Continue with Facebook
           </Button>
