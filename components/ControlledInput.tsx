@@ -1,12 +1,19 @@
 import { ComponentPropsWithRef, forwardRef, type ReactNode } from "react"
 import { Controller } from "react-hook-form"
 import { Input, Text, YStack } from "tamagui"
+import type { InputProps } from "tamagui"
 
 //TODO define proper type:
 type ControlledInputProps = ComponentPropsWithRef<any>
 
 const ControlledInput = forwardRef(function CustomInput(
-  { children, error, name, ...otherControllerProps }: ControlledInputProps,
+  {
+    children,
+    error,
+    name,
+    placeholder,
+    ...otherControllerProps
+  }: ControlledInputProps,
   ref
 ) {
   return (
@@ -20,7 +27,7 @@ const ControlledInput = forwardRef(function CustomInput(
             autoCapitalize={"none"}
             id={name}
             size="$4"
-            placeholder={name[0].toUpperCase() + name.slice(1)}
+            placeholder={placeholder}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

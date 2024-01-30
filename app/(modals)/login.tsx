@@ -87,7 +87,7 @@ export default function Login() {
 
       if (createdSessionId) {
         setActive!({ session: createdSessionId })
-        router.navigate("/")
+        router.replace("/(tabs)")
       }
     } catch (err) {
       console.error("OAuth error", err)
@@ -100,6 +100,7 @@ export default function Login() {
         <YStack gap="$2">
           <ControlledInput
             name={"email"}
+            placeholder={"Email"}
             control={control}
             rules={{
               required: true,
@@ -109,6 +110,7 @@ export default function Login() {
 
           <ControlledInput
             name={"password"}
+            placeholder={"Password"}
             control={control}
             rules={{
               required: true,

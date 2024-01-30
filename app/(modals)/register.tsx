@@ -34,6 +34,7 @@ function SignUpForm({ onPressSignUp, loading }: any) {
         <YStack gap={"$2"}>
           <ControlledInput
             name={"email"}
+            placeholder={"Email"}
             control={control}
             rules={{
               required: true,
@@ -42,6 +43,7 @@ function SignUpForm({ onPressSignUp, loading }: any) {
           />
           <ControlledInput
             name={"password"}
+            placeholder={"Password"}
             control={control}
             rules={{
               required: true,
@@ -49,7 +51,8 @@ function SignUpForm({ onPressSignUp, loading }: any) {
             error={errors.password}
           />
           <ControlledInput
-            name={"confirm-password"}
+            name={"confirmPassword"}
+            placeholder={"Confirm password"}
             control={control}
             rules={{
               required: true,
@@ -92,6 +95,7 @@ function VerifyForm({ onPressVerify, loading, enteredEmail }: any) {
         </Text>
         <ControlledInput
           name={"code"}
+          placeholder={"Verification code"}
           control={control}
           rules={{
             required: true,
@@ -161,9 +165,9 @@ export default function SignUp() {
         code: data.code,
       })
 
-      await setActive({ session: completeSignUp.createdSessionId }).then(() =>
-        router.replace("/(tabs)")
-      )
+      await setActive({ session: completeSignUp.createdSessionId })
+
+      router.replace("/(tabs)")
     } catch (err: any) {
       alert(err.errors[0].message)
     } finally {
